@@ -4,7 +4,7 @@ A small web app for the Vera Health full-stack take-home. A doctor can view a no
 
 Built with Next.js (App Router), TypeScript and PostgreSQL.
 
-> Status: project setup only. The features are not built yet.
+> Status: you can browse the library, open a template, and make your own copy. Asking Vera to change a copy, and undo, redo, publish and discard, come next.
 
 ## What you need
 

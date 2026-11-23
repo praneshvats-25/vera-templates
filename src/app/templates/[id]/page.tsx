@@ -1,9 +1,11 @@
 /**
  * Template page: one template's text, drawn with the design's styling.
  * Vera's originals and the user's copies both open here.
+ * An original is read-only and offers "Edit a copy".
  */
 import { notFound } from "next/navigation";
 import { AppShell } from "@/components/app-shell";
+import { EditCopyForm } from "@/components/edit-copy-form";
 import { ReadingGuide } from "@/components/reading-guide";
 import { TemplatePreview } from "@/components/template-preview";
 import { TemplateToolbar } from "@/components/template-toolbar";
@@ -33,7 +35,10 @@ export default async function TemplatePage({ params }: PageProps<"/templates/[id
   return (
     <AppShell tone="template">
       <div className="flex h-full flex-col">
-        <TemplateToolbar />
+        <TemplateToolbar>
+          {/* Only Vera's originals can be copied. */}
+          {template.isOriginal && <EditCopyForm templateId={template.id} />}
+        </TemplateToolbar>
         <div className="flex-1 overflow-y-auto">
           <div className="mx-auto flex w-content flex-col gap-5 pt-6 pb-10">
             <header className="flex flex-col gap-1">
