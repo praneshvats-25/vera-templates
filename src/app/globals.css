@@ -1,6 +1,7 @@
 /*
  * Global styles.
- * Loads Tailwind and tells it which fonts `font-sans` and `font-mono` mean.
+ * Loads Tailwind and defines the design tokens from the Figma file once:
+ * colours, fonts, text sizes and fixed widths. Components use these names, never raw values.
  */
 @import "tailwindcss";
 
@@ -9,8 +10,56 @@
   --font-mono: var(--font-jetbrains-mono);
 }
 
-body {
-  background: #ffffff;
-  color: #171717;
-  font-family: var(--font-manrope), sans-serif;
+@theme {
+  /* Colours ("VeraKit colors" in Figma). */
+  --color-grey-50: #f9fafa;
+  --color-grey-100: #f0f0f2;
+  --color-grey-200: #e7e8ea;
+  --color-grey-300: #c7c8cc;
+  --color-grey-400: #8c8f97;
+  --color-grey-500: #5a5e6a;
+  --color-grey-900: #13192a;
+  --color-brand-100: #e5ebf1;
+  --color-brand-500: #416284;
+  --color-secondary: #f6f6fa;
+  --color-card-hover: #fbfbff;
+  --color-primary-disabled: #b8c1d1;
+  --color-navy-8: rgb(19 25 42 / 8%);
+
+  /* Text styles. Each name sets the size, line height and weight together. */
+  --text-page-title: 26px;
+  --text-page-title--line-height: 36px;
+  --text-page-title--font-weight: 600;
+  --text-template-title: 22px;
+  --text-template-title--line-height: 32px;
+  --text-template-title--font-weight: 600;
+  --text-row-title: 20px;
+  --text-row-title--line-height: 28px;
+  --text-row-title--font-weight: 500;
+  --text-card-title: 16px;
+  --text-card-title--line-height: 24px;
+  --text-card-title--font-weight: 500;
+  --text-template: 15px;
+  --text-template--line-height: 24px;
+  --text-body: 14px;
+  --text-body--line-height: 21px;
+  --text-ui: 14px;
+  --text-ui--line-height: 20px;
+  --text-guide: 13px;
+  --text-guide--line-height: 18px;
+  --text-small: 12px;
+  --text-small--line-height: 16px;
+  --text-avatar: 10px;
+  --text-avatar--line-height: 12px;
+
+  /* Fixed widths and heights of the 1440 x 900 desktop layout. */
+  --container-frame: 1440px;
+  --container-sidebar: 250px;
+  --container-content: 1000px;
+  --container-template: 704px;
+  --container-guide: 280px;
+  --spacing-toolbar: 57px;
+  --spacing-card: 176px;
+
+  --shadow-page: 0 1px 2px rgb(0 0 0 / 5%);
 }
