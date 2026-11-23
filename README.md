@@ -8,7 +8,7 @@ Built with Next.js (App Router), TypeScript and PostgreSQL.
 
 ## What you need
 
-- Node.js 20.9 or newer
+- Node.js 22.12 or newer
 - Docker Desktop (running)
 
 ## Run it from a fresh clone
@@ -25,14 +25,18 @@ Then open http://localhost:3000.
 
 ## Commands
 
-| Command           | What it does                                    |
-| ----------------- | ----------------------------------------------- |
-| `npm run dev`     | Start the app in development mode               |
-| `npm run build`   | Build the app for production                    |
-| `npm run lint`    | Check the code for common mistakes              |
-| `npm run db:up`   | Start the Postgres database                     |
-| `npm run db:down` | Stop the Postgres database (data is kept)       |
-| `npm run db:push` | Create or update tables from `src/db/schema.ts` |
+| Command             | What it does                                    |
+| ------------------- | ----------------------------------------------- |
+| `npm run dev`       | Start the app in development mode               |
+| `npm run build`     | Build the app for production                    |
+| `npm run check`     | Run every check below in one go                 |
+| `npm run lint`      | Check the code for common mistakes              |
+| `npm run format`    | Fix the code layout (`format:check` only looks) |
+| `npm run typecheck` | Check the types                                 |
+| `npm run test`      | Run the unit tests                              |
+| `npm run db:up`     | Start the Postgres database                     |
+| `npm run db:down`   | Stop the Postgres database (data is kept)       |
+| `npm run db:push`   | Create or update tables from `src/db/schema.ts` |
 
 ## Where things are
 

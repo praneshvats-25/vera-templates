@@ -1,0 +1,6 @@
+# Files Prettier should not format: generated or installed.
+.next
+node_modules
+package-lock.json
+next-env.d.ts
+drizzle
