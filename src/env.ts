@@ -5,7 +5,19 @@
 import { z } from "zod";
 
 const envSchema = z.object({
-  DATABASE_URL: z.url(),
+  // Must be a full PostgreSQL address with a host,
+  // for example postgres://vera:vera@localhost:5433/vera
+  DATABASE_URL: z.url({
+    protocol: /^postgres(ql)?$/,
+    hostname: /.+/,
+    error:
+      "DATABASE_URL must be a PostgreSQL address with a host, like postgres://user:password@localhost:5433/database",
+  }),
 });
 
-export const env = envSchema.parse(process.env);
+const parsed = envSchema.safeParse(process.env);
+if (!parsed.success) {
+  throw new Error(`Invalid settings. Check your .env file.\n${z.prettifyError(parsed.error)}`);
+}
+
+export const env = parsed.data;
