@@ -7,6 +7,7 @@ import "server-only";
 import { and, asc, eq, sql } from "drizzle-orm";
 import { db } from "@/db";
 import { type DocumentType, templates, templateVersions } from "@/db/schema";
+import type { VersionPointers } from "@/domain/version-history";
 
 export interface TemplateSummary {
   id: number;
@@ -20,6 +21,10 @@ export interface TemplateSummary {
 export interface TemplateDetail extends TemplateSummary {
   // The text of the version shown on screen, exactly as saved.
   content: string;
+  // Which version is shown, which is published, and where Redo stops.
+  pointers: VersionPointers;
+  canUndo: boolean;
+  canRedo: boolean;
 }
 
 const summaryColumns = {
@@ -52,7 +57,14 @@ export async function listTemplates(): Promise<TemplateSummary[]> {
 /** One template with the text of the version it currently shows, or null if there is none. */
 export async function getTemplate(id: number): Promise<TemplateDetail | null> {
   const [row] = await db
-    .select({ ...summaryColumns, content: templateVersions.content })
+    .select({
+      ...summaryColumns,
+      current: templates.currentVersionNumber,
+      published: templates.publishedVersionNumber,
+      tip: templates.tipVersionNumber,
+      content: templateVersions.content,
+      parentOfCurrent: templateVersions.parentVersionNumber,
+    })
     .from(templates)
     .innerJoin(
       templateVersions,
@@ -64,6 +76,16 @@ export async function getTemplate(id: number): Promise<TemplateDetail | null> {
     .where(eq(templates.id, id));
   if (!row) return null;
 
-  const { sourceTemplateId, ...template } = row;
-  return { ...template, isOriginal: sourceTemplateId === null };
+  return {
+    id: row.id,
+    name: row.name,
+    description: row.description,
+    documentType: row.documentType,
+    isOriginal: row.sourceTemplateId === null,
+    content: row.content,
+    pointers: { current: row.current, published: row.published, tip: row.tip },
+    // Undo goes to the version this one was made from. Redo is possible until the tip is shown.
+    canUndo: row.parentOfCurrent !== null,
+    canRedo: row.current !== row.tip,
+  };
 }
