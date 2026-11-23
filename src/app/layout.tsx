@@ -1,6 +1,6 @@
 /**
  * Root layout. Wraps every page.
- * Loads the two fonts from the design: Manrope (text) and JetBrains Mono (template text).
+ * Loads the two fonts from the design: Manrope (text) and JetBrains Mono (code-like examples).
  */
 import type { Metadata } from "next";
 import { JetBrains_Mono, Manrope } from "next/font/google";
@@ -23,8 +23,8 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className={`${manrope.variable} ${jetbrainsMono.variable} h-full antialiased`}>
-      <body className="min-h-full flex flex-col">{children}</body>
+    <html lang="en" className={`${manrope.variable} ${jetbrainsMono.variable} antialiased`}>
+      <body className="bg-grey-100 font-sans text-grey-900">{children}</body>
     </html>
   );
 }
