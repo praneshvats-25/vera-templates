@@ -1,0 +1,16 @@
+/*
+ * Global styles.
+ * Loads Tailwind and tells it which fonts `font-sans` and `font-mono` mean.
+ */
+@import "tailwindcss";
+
+@theme inline {
+  --font-sans: var(--font-manrope);
+  --font-mono: var(--font-jetbrains-mono);
+}
+
+body {
+  background: #ffffff;
+  color: #171717;
+  font-family: var(--font-manrope), sans-serif;
+}

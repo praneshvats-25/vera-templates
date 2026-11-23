@@ -1,0 +1,23 @@
+# Local Postgres database for the app.
+# Start it with `npm run db:up`, stop it with `npm run db:down`.
+services:
+  db:
+    image: postgres:17
+    environment:
+      POSTGRES_USER: vera
+      POSTGRES_PASSWORD: vera
+      POSTGRES_DB: vera
+    ports:
+      # Port 5433 on your machine, so it never clashes with a Postgres already on 5432.
+      - "5433:5432"
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    healthcheck:
+      # Lets `docker compose up --wait` return only once the database accepts connections.
+      test: ["CMD-SHELL", "pg_isready -U vera -d vera"]
+      interval: 2s
+      timeout: 5s
+      retries: 15
+
+volumes:
+  db-data:
