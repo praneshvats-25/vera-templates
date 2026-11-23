@@ -4,9 +4,9 @@
  * and never write queries themselves.
  */
 import "server-only";
-import { asc, sql } from "drizzle-orm";
+import { and, asc, eq, sql } from "drizzle-orm";
 import { db } from "@/db";
-import { type DocumentType, templates } from "@/db/schema";
+import { type DocumentType, templates, templateVersions } from "@/db/schema";
 
 export interface TemplateSummary {
   id: number;
@@ -17,16 +17,23 @@ export interface TemplateSummary {
   isOriginal: boolean;
 }
 
+export interface TemplateDetail extends TemplateSummary {
+  // The text of the version shown on screen, exactly as saved.
+  content: string;
+}
+
+const summaryColumns = {
+  id: templates.id,
+  name: templates.name,
+  description: templates.description,
+  documentType: templates.documentType,
+  sourceTemplateId: templates.sourceTemplateId,
+};
+
 /** All templates in library order: by document type, the user's copies first, then by position. */
 export async function listTemplates(): Promise<TemplateSummary[]> {
   const rows = await db
-    .select({
-      id: templates.id,
-      name: templates.name,
-      description: templates.description,
-      documentType: templates.documentType,
-      sourceTemplateId: templates.sourceTemplateId,
-    })
+    .select(summaryColumns)
     .from(templates)
     .orderBy(
       asc(templates.documentType),
@@ -40,4 +47,23 @@ export async function listTemplates(): Promise<TemplateSummary[]> {
     ...row,
     isOriginal: sourceTemplateId === null,
   }));
+}
+
+/** One template with the text of the version it currently shows, or null if there is none. */
+export async function getTemplate(id: number): Promise<TemplateDetail | null> {
+  const [row] = await db
+    .select({ ...summaryColumns, content: templateVersions.content })
+    .from(templates)
+    .innerJoin(
+      templateVersions,
+      and(
+        eq(templateVersions.templateId, templates.id),
+        eq(templateVersions.versionNumber, templates.currentVersionNumber),
+      ),
+    )
+    .where(eq(templates.id, id));
+  if (!row) return null;
+
+  const { sourceTemplateId, ...template } = row;
+  return { ...template, isOriginal: sourceTemplateId === null };
 }
