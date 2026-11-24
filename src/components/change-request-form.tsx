@@ -11,6 +11,8 @@
  * - A reply goes away when a different version comes on screen.
  * - "Undo" beside a reply is offered only when that request saved a version
  *   and that version is still the one on screen.
+ * - The reply line is always on the page, so a screen reader announces a new reply.
+ * - The box grows with a long request, so it can be read back before sending.
  * - While anything is saving the box is locked, so nothing typed can be lost
  *   when the box is cleared. If a request fails, the typed message stays in the box.
  */
@@ -36,34 +38,36 @@ export function ChangeRequestForm({ templateId, pointers }: ChangeRequestFormPro
 
   return (
     <div className="flex flex-col gap-2">
-      {lineText !== null && (
-        <div className="flex items-start gap-2 px-1">
+      {/* This row is always on the page, even when empty. A screen reader only announces
+          a status line that was already there when its text changed. */}
+      <div className={lineText === null ? "sr-only" : "flex items-start gap-2 px-1"}>
+        {lineText !== null && (
           <span
             aria-hidden
             className="flex size-5.5 shrink-0 items-center justify-center rounded-full bg-brand-100 text-small font-bold"
           >
             V
           </span>
-          <div className="flex flex-wrap items-baseline gap-x-1 text-body">
-            <p role="status">{lineText}</p>
-            {canUndoReply && (
-              <form action={formAction}>
-                <VersionFields templateId={templateId} pointers={pointers} />
-                <button
-                  type="submit"
-                  name="move"
-                  value="undo"
-                  aria-label="Undo this change"
-                  disabled={busy}
-                  className="underline"
-                >
-                  Undo
-                </button>
-              </form>
-            )}
-          </div>
+        )}
+        <div className="flex flex-wrap items-baseline gap-x-1 text-body">
+          <p role="status">{lineText}</p>
+          {canUndoReply && (
+            <form action={formAction}>
+              <VersionFields templateId={templateId} pointers={pointers} />
+              <button
+                type="submit"
+                name="move"
+                value="undo"
+                aria-label="Undo this change"
+                disabled={busy}
+                className="underline"
+              >
+                Undo
+              </button>
+            </form>
+          )}
         </div>
-      )}
+      </div>
 
       <form
         action={formAction}
@@ -80,7 +84,7 @@ export function ChangeRequestForm({ templateId, pointers }: ChangeRequestFormPro
           readOnly={busy}
           placeholder="Tell Vera what to change…"
           aria-label="Message to Vera"
-          className="resize-none text-template outline-none placeholder:text-grey-400"
+          className="field-sizing-content max-h-40 resize-none text-template outline-none placeholder:text-grey-400"
         />
         <div className="flex justify-end">
           <IconButton

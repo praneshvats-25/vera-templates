@@ -330,7 +330,7 @@ The reasoning for each decision is in sections 2 to 7 above. This section is the
 
 **The browser tests prove each step, not only the end.**
 
-- _How it was checked:_ the browser tests (six in all, with the 1280-wide check) run against a production build with their own database, `vera_test`. They passed twice in a row and once more on a clean copy of the repo. The development database was not touched.
+- _How it was checked:_ the browser tests (seven in all, with the 1280-wide and dropped-connection checks) run against a production build with their own database, `vera_test`. They passed twice in a row and once more on a clean copy of the repo. The development database was not touched.
 
 ### By hand in Chrome, on the final build
 
@@ -435,8 +435,19 @@ The finished build was clicked through in Chrome against the brief's steps, with
 
 I also asked for one check by hand on a fresh production build: open "My SOAP Note" from the library and confirm the title, the template text and the version controls appear. They did.
 
+### Final review of the whole repo
+
+| The AI built                                            | What was wrong                                                           | What I chose                                                                                                                                                                                            |
+| ------------------------------------------------------- | ------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Server calls with no handling for a dropped connection. | The page was replaced by an error screen and the typed request was lost. | Catch the failure, show the reason, and keep the request in the box. An error page with "Try again" covers anything else. A browser test cuts the connection to prove it, and it failed before the fix. |
+| A Discard that always ended the Redo path.              | Sent when there was nothing to discard, it still wiped Redo.             | Discard with nothing to discard changes nothing. Covered by a unit test.                                                                                                                                |
+| "Keep it under 2,000 characters."                       | Exactly 2,000 characters is accepted.                                    | "Keep it to 2,000 characters or fewer."                                                                                                                                                                 |
+| A reply line created together with its text.            | A screen reader may not announce it.                                     | The status line is always on the page, and only its text changes.                                                                                                                                       |
+| A request box fixed at one line.                        | A long request could not be read back before sending.                    | The box grows with the text, up to a limit.                                                                                                                                                             |
+| Test setup that started `npm` without a shell.          | It cannot start on Windows.                                              | The commands run through the shell.                                                                                                                                                                     |
+
 ## 12. AI tools
 
-Claude Code wrote the code, the tests and the migrations, and drafted the plan. I use Claude Code as parallel dr
+Claude Code wrote the code, the tests and the migrations, and drafted the plan and these notes. I used it as a pair programmer: I directed the work, reviewed every part and made the decisions. Every "I chose" above is a change I asked for or an option I picked, and section 1 lists what I assumed.
 
 Approvals, as they happened: I approved the plan and each commit of the first pull request before it was made. In the second pull request I reviewed the code before it was committed, and again in the open pull request. Its last fix and the documentation were committed on my instruction, not approved one by one.

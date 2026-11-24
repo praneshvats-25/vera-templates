@@ -5,6 +5,7 @@
 import { expect, test } from "@playwright/test";
 import {
   askVera,
+  copyTitle,
   editACopy,
   messageBox,
   openVeraSoapNote,
@@ -106,4 +107,30 @@ test("a request that is too long gets a clear reason and stays in the box", asyn
   await expect(page.getByText(tooLongMessage)).toBeVisible();
   await expect(messageBox(page)).toHaveValue(tooLong);
   await expect(templateText(page)).not.toContainText("Allergies:");
+});
+
+test("a request that cannot reach the server stays in the box, and the page stays up", async ({
+  page,
+}) => {
+  await openVeraSoapNote(page);
+  await editACopy(page);
+
+  // Cut the connection for the next save.
+  await page.route("**/templates/*", async (route) => {
+    if (route.request().method() === "POST") await route.abort();
+    else await route.continue();
+  });
+  await askVera(page, "add allergies");
+
+  // The reason is shown, the typed request is still there, and the copy is still on screen.
+  await expect(page.getByText("That did not go through.")).toBeVisible();
+  await expect(messageBox(page)).toHaveValue("add allergies");
+  await expect(copyTitle(page)).toBeVisible();
+  await expect(templateText(page)).not.toContainText("Allergies:");
+
+  // With the connection back, sending the same request works.
+  await page.unroute("**/templates/*");
+  await page.getByRole("button", { name: "Send" }).click();
+  await expect(page.getByText("Done. Added an Allergies section.")).toBeVisible();
+  await expect(messageBox(page)).toHaveValue("");
 });

@@ -33,7 +33,7 @@ const messageSchema = z
   .trim()
   .min(1, { error: emptyRequestMessage })
   .max(longestRequest, {
-    error: "That request is too long. Keep it under 2,000 characters.",
+    error: "That request is too long. Keep it to 2,000 characters or fewer.",
   });
 
 const notFoundMessage = "This template could not be found.";

@@ -83,6 +83,8 @@ export function pointersAfterMove(
     case "publish":
       return { ...pointers, published: pointers.current };
     case "discard":
+      // Nothing to discard when the published version is already shown. Redo is left alone.
+      if (pointers.current === pointers.published) return pointers;
       // Back to the published version. It also becomes the tip, so the discarded
       // changes cannot be brought back with Redo.
       return { ...pointers, current: pointers.published, tip: pointers.published };
