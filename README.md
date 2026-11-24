@@ -35,11 +35,19 @@ Then open http://localhost:3000.
 
 ```bash
 npm run check                    # lint, format, types and unit tests
-npx playwright install chromium  # first time only: the browser for the test below
-npm run test:e2e                 # one browser test of the whole main flow
+npx playwright install chromium  # first time only: the browser for the tests below
+npm run test:e2e                 # five browser tests (listed below)
 ```
 
-The browser test needs the database running (`npm run db:up`). It builds the app, serves it on port 3100, and uses its own database, `vera_test`, which it resets on every run. Your development data is not touched.
+The browser tests need the database running (`npm run db:up`). They build the app for production, serve it on port 3100, and use their own database, `vera_test`, which is reset on every run. Your development data is not touched.
+
+The five browser tests:
+
+1. **The main flow.** Copy the SOAP Note, add Allergies, Undo, Redo, Publish, add Medication Reconciliation, Discard and reload. The "Unpublished changes" badge is checked at every step. Vera's original and a second copy are checked as unchanged.
+2. **The request box is locked while a request is saving**, so nothing typed can be erased.
+3. **A refused Undo does not hide the reply** to the next request.
+4. **An error goes away** as soon as a later action works.
+5. **A request that is too long** gets a clear reason and stays in the box.
 
 ## Commands
 
@@ -52,7 +60,7 @@ The browser test needs the database running (`npm run db:up`). It builds the app
 | `npm run format`      | Fix the code layout (`format:check` only looks)        |
 | `npm run typecheck`   | Check the types                                        |
 | `npm run test`        | Run the unit tests                                     |
-| `npm run test:e2e`    | Run the browser test of the main flow                  |
+| `npm run test:e2e`    | Run the five browser tests                             |
 | `npm run db:up`       | Start the Postgres database                            |
 | `npm run db:down`     | Stop the Postgres database (data is kept)              |
 | `npm run db:migrate`  | Apply the database changes that have not run yet       |
@@ -69,7 +77,7 @@ src/data/        the only code that talks to the database (reads and writes)
 src/domain/      rules with no database or screen code: Vera's rules, version moves
 src/db/          tables, connection, seed and the starter templates' text
 drizzle/         database migrations (SQL)
-e2e/             the browser test and its database setup
+e2e/             the browser tests and their database setup
 NOTES.md         decisions, cuts, and what AI tools did (one page)
-REVIEW_LOG.md    every objection I raised to the AI's plan and code
+REVIEW_LOG.md    my decisions in detail, and every objection I raised
 ```
