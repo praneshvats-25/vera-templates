@@ -51,6 +51,9 @@
   --text-small--line-height: 16px;
   --text-avatar: 10px;
   --text-avatar--line-height: 12px;
+  --text-badge: 10px;
+  --text-badge--line-height: 10px;
+  --text-badge--letter-spacing: 0.08em;
 
   /* Fixed widths and heights of the 1440 x 900 desktop layout. */
   --container-frame: 1440px;
@@ -58,8 +61,10 @@
   --container-content: 1000px;
   --container-template: 704px;
   --container-guide: 280px;
+  --container-request: 720px;
   --spacing-toolbar: 57px;
   --spacing-card: 176px;
 
   --shadow-page: 0 1px 2px rgb(0 0 0 / 5%);
+  --shadow-request: 0 6px 18px rgb(19 25 42 / 8%);
 }

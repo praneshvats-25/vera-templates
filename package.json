@@ -11,6 +11,8 @@
     "format:check": "prettier --check .",
     "typecheck": "next typegen && tsc --noEmit",
     "test": "vitest run",
+    "test:e2e": "playwright test",
+    "test:e2e:server": "tsx e2e/prepare-test-database.ts && next build && next start",
     "check": "npm run lint && npm run format:check && npm run typecheck && npm run test",
     "db:up": "docker compose up -d --wait",
     "db:down": "docker compose down",
@@ -29,6 +31,7 @@
     "zod": "^4.6.7"
   },
   "devDependencies": {
+    "@playwright/test": "^1.65.1",
     "@tailwindcss/turbopack": "4.3.3",
     "@types/node": "^22.20.5",
     "@types/pg": "^8.23.1",

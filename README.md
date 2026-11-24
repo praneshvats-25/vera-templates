@@ -2,9 +2,7 @@
 
 A small web app for the Vera Health full-stack take-home. A doctor can view a note template, make a copy, ask Vera to change it, and publish or undo those changes.
 
-Built with Next.js (App Router), TypeScript and PostgreSQL.
-
-> Status: you can browse the library, open a template, and make your own copy. Asking Vera to change a copy, and undo, redo, publish and discard, come next.
+Built with Next.js (App Router), TypeScript and PostgreSQL. The decisions behind it are in [NOTES.md](NOTES.md).
 
 ## What you need
 
@@ -24,17 +22,45 @@ npm run dev            # start the app
 
 Then open http://localhost:3000.
 
+## Try the main flow
+
+1. The library shows Vera's templates, grouped by document type.
+2. Open **SOAP Note**. It is read-only. Click **Edit a copy**.
+3. In the box at the bottom, type `add allergies` and press the send button. An Allergies section appears and Vera confirms.
+4. Use **Undo** and **Redo** at the top right.
+5. Click **Publish changes**.
+6. Type `add medication` and send it, then click **Discard changes**. The copy returns to what you published.
+
+## Tests
+
+```bash
+npm run check                    # lint, format, types and unit tests
+npx playwright install chromium  # first time only: the browser for the tests below
+npm run test:e2e                 # five browser tests (listed below)
+```
+
+The browser tests need the database running (`npm run db:up`). They build the app for production, serve it on port 3100, and use their own database, `vera_test`, which is reset on every run. Your development data is not touched.
+
+The five browser tests:
+
+1. **The main flow.** Copy the SOAP Note, add Allergies, Undo, Redo, Publish, add Medication Reconciliation, Discard and reload. The "Unpublished changes" badge is checked at every step. Vera's original and a second copy are checked as unchanged.
+2. **The request box is locked while a request is saving**, so nothing typed can be erased.
+3. **A refused Undo does not hide the reply** to the next request.
+4. **An error goes away** as soon as a later action works.
+5. **A request that is too long** gets a clear reason and stays in the box.
+
 ## Commands
 
 | Command               | What it does                                           |
 | --------------------- | ------------------------------------------------------ |
 | `npm run dev`         | Start the app in development mode                      |
 | `npm run build`       | Build the app for production                           |
-| `npm run check`       | Run every check below in one go                        |
+| `npm run check`       | Run lint, format check, type check and unit tests      |
 | `npm run lint`        | Check the code for common mistakes                     |
 | `npm run format`      | Fix the code layout (`format:check` only looks)        |
 | `npm run typecheck`   | Check the types                                        |
 | `npm run test`        | Run the unit tests                                     |
+| `npm run test:e2e`    | Run the five browser tests                             |
 | `npm run db:up`       | Start the Postgres database                            |
 | `npm run db:down`     | Stop the Postgres database (data is kept)              |
 | `npm run db:migrate`  | Apply the database changes that have not run yet       |
@@ -44,14 +70,14 @@ Then open http://localhost:3000.
 ## Where things are
 
 ```
-src/app/                     pages and layout
-src/db/schema.ts             database tables
-src/db/index.ts              database connection
-src/db/seed.ts               adds Vera's starter templates
-src/db/starter-templates.ts  the starter templates' text
-src/env.ts                   settings read from the environment
-drizzle/                     database migrations (SQL)
-docker-compose.yml           local Postgres
-drizzle.config.ts            settings for the migration tool (drizzle-kit)
-NOTES.md                     choices, cuts and open questions
+src/app/         pages: the library and the template page
+src/components/  screen pieces; src/components/ui/ holds the shared buttons and badges
+src/actions/     form entry points: check the input, call the database layer
+src/data/        the only code that talks to the database (reads and writes)
+src/domain/      rules with no database or screen code: Vera's rules, version moves
+src/db/          tables, connection, seed and the starter templates' text
+drizzle/         database migrations (SQL)
+e2e/             the browser tests and their database setup
+NOTES.md         decisions, cuts, and what AI tools did (one page)
+REVIEW_LOG.md    my decisions in detail, and every objection I raised
 ```
