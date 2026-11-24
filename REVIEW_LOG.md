@@ -1,7 +1,8 @@
 # Review log
 
-What Claude Code proposed, what was wrong with it, what I chose instead, and how it was checked.
-[NOTES.md](NOTES.md) is the one-page summary. This file has the main decisions in detail, then every objection I raised, in the order it happened.
+Every call in this file is mine. Claude Code wrote the code; I reviewed its plan and its code, and each row below is something I sent back with what was wrong and what to do instead.
+
+[NOTES.md](NOTES.md) explains each decision and its trade-offs. This file is the evidence behind it: how each decision was checked, then every correction I made, in the order it happened.
 
 ## How I ran the work
 
@@ -14,9 +15,9 @@ What Claude Code proposed, what was wrong with it, what I chose instead, and how
 - **Approvals, as they happened.** I approved the plan. In PR 1 I saw the exact files and test results and approved each commit, the push, the pull request and the merge. In PR 2 I reviewed the code before it was committed and sent back fixes. I then told the AI to save the work, open the pull request and fix one more problem. That last fix and the documentation were committed on that instruction, not approved one by one. I reviewed the open pull request before merging it.
 - **House rules.** Simple code. A short description at the top of every file. Tailwind theme tokens, no one-off values. One way of doing each thing, everywhere. Nothing described as "passed" before it ran.
 
-## The main decisions in detail
+## How each decision was checked
 
-Each one says what would break, what I decided, and how it was checked.
+Each one says what would break, what I decided, and how it was checked. The reasoning and trade-offs are in NOTES.md.
 
 ### What editing a copy means
 
@@ -100,7 +101,7 @@ Each one says what would break, what I decided, and how it was checked.
 - _My decision:_ check the badge after the edit, after Undo, after Redo and after Publish. Check the Medication section is there before Discard and gone after a reload, with Allergies still there. Reopen the copy from the library, and check Vera's original and a second copy.
 - _How it was checked:_ five browser tests run against a production build with their own database, `vera_test`. They passed twice in a row and once more on a clean copy of the repo. The development database was not touched.
 
-## Every objection, in order
+## Every correction I made, in order
 
 ### 1. Cases I decided before the plan
 
@@ -183,7 +184,7 @@ Each one says what would break, what I decided, and how it was checked.
 | A test-database guard that printed the address it refused.                                   | That address can contain a password, and the setup logs the error.                                           | The message is now "Refusing to reset. Expected the local vera_test database."                                    |
 | A 2,001-character request answered with "Type a request for Vera first."                     | The box was full.                                                                                            | A message about the length. The text stays in the box.                                                            |
 | Separate feedback in the toolbar and the request box.                                        | An old failure stayed on screen after a different action worked.                                             | One shared state for every action on a copy. A browser test covers both directions, and it fails on the old code. |
-| NOTES longer than a page, saying I "approved every commit" before I had.                     | The brief caps it at one page.                                                                               | Trimmed. The approval wording states only what happened.                                                          |
+| NOTES said I "approved every commit" before I had.                                           | It claimed more than had happened.                                                                           | The approval wording states only what happened.                                                                   |
 
 I also asked for one check by hand on a fresh production build: open "My SOAP Note" from the library and confirm the title, the template text and the version controls appear. They did.
 

@@ -2,7 +2,7 @@
 
 A small web app for the Vera Health full-stack take-home. A doctor can view a note template, make a copy, ask Vera to change it, and publish or undo those changes.
 
-Built with Next.js (App Router), TypeScript and PostgreSQL. The decisions behind it are in [NOTES.md](NOTES.md).
+Built with Next.js (App Router), TypeScript and PostgreSQL. My decisions, trade-offs and known rough edges are in [NOTES.md](NOTES.md). Every correction I made to the AI's plan and code is in [REVIEW_LOG.md](REVIEW_LOG.md).
 
 ## What you need
 
@@ -78,6 +78,6 @@ src/domain/      rules with no database or screen code: Vera's rules, version mo
 src/db/          tables, connection, seed and the starter templates' text
 drizzle/         database migrations (SQL)
 e2e/             the browser tests and their database setup
-NOTES.md         decisions, cuts, and what AI tools did (one page)
-REVIEW_LOG.md    my decisions in detail, and every objection I raised
+NOTES.md         my assumptions, decisions, trade-offs and rough edges
+REVIEW_LOG.md    how each decision was checked, and every correction I made
 ```
