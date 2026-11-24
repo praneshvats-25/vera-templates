@@ -7,6 +7,7 @@
 import { notFound } from "next/navigation";
 import { AppShell } from "@/components/app-shell";
 import { ChangeRequestForm } from "@/components/change-request-form";
+import { CopyActionsProvider } from "@/components/copy-actions";
 import { EditCopyForm } from "@/components/edit-copy-form";
 import { ReadingGuide } from "@/components/reading-guide";
 import { TemplatePreview } from "@/components/template-preview";
@@ -37,44 +38,47 @@ export default async function TemplatePage({ params }: PageProps<"/templates/[id
 
   return (
     <AppShell tone="template">
-      <div className="flex h-full flex-col">
-        <TemplateToolbar>
-          {/* An original can only be copied. A copy can be changed. */}
-          {template.isOriginal ? (
-            <EditCopyForm templateId={template.id} />
-          ) : (
-            <VersionControls
-              templateId={template.id}
-              pointers={template.pointers}
-              canUndo={template.canUndo}
-              canRedo={template.canRedo}
-            />
-          )}
-        </TemplateToolbar>
-        <div className="flex-1 overflow-y-auto">
-          <div className="mx-auto flex w-content flex-col gap-5 pt-6 pb-10">
-            <header className="flex flex-col gap-1">
-              <h1 className="text-template-title">{template.name}</h1>
-              <p className="text-body text-grey-500">{details.join(" · ")}</p>
-            </header>
-            <div className="flex items-start gap-4">
-              <section
-                aria-label="Template text"
-                className="w-template rounded-2xl border border-grey-200 bg-white p-8"
-              >
-                <TemplatePreview content={template.content} />
-              </section>
-              <ReadingGuide />
+      {/* The version controls and the request box share one state. An original uses neither. */}
+      <CopyActionsProvider>
+        <div className="flex h-full flex-col">
+          <TemplateToolbar>
+            {/* An original can only be copied. A copy can be changed. */}
+            {template.isOriginal ? (
+              <EditCopyForm templateId={template.id} />
+            ) : (
+              <VersionControls
+                templateId={template.id}
+                pointers={template.pointers}
+                canUndo={template.canUndo}
+                canRedo={template.canRedo}
+              />
+            )}
+          </TemplateToolbar>
+          <div className="flex-1 overflow-y-auto">
+            <div className="mx-auto flex w-content flex-col gap-5 pt-6 pb-10">
+              <header className="flex flex-col gap-1">
+                <h1 className="text-template-title">{template.name}</h1>
+                <p className="text-body text-grey-500">{details.join(" · ")}</p>
+              </header>
+              <div className="flex items-start gap-4">
+                <section
+                  aria-label="Template text"
+                  className="w-template rounded-2xl border border-grey-200 bg-white p-8"
+                >
+                  <TemplatePreview content={template.content} />
+                </section>
+                <ReadingGuide />
+              </div>
             </div>
           </div>
+          {/* Only a copy has the request box. Users never type into the template text itself. */}
+          {!template.isOriginal && (
+            <div className="mx-auto w-request shrink-0 pb-4">
+              <ChangeRequestForm templateId={template.id} pointers={template.pointers} />
+            </div>
+          )}
         </div>
-        {/* Only a copy has the request box. Users never type into the template text itself. */}
-        {!template.isOriginal && (
-          <div className="mx-auto w-request shrink-0 pb-4">
-            <ChangeRequestForm templateId={template.id} pointers={template.pointers} />
-          </div>
-        )}
-      </div>
+      </CopyActionsProvider>
     </AppShell>
   );
 }

@@ -4,18 +4,19 @@
  * The area under a copy: Vera's reply, and the box for sending her a request.
  * Figma calls the box "Change bar".
  *
- * - The line above the box always shows the result of the most recent action here:
+ * - The line above the box always shows the result of the most recent action on this copy,
+ *   whether it came from here or from the version controls at the top:
  *   Vera's reply (including "Nothing to change."), or a short reason when something failed.
+ *   A later action that works replaces an earlier failure.
  * - A reply goes away when a different version comes on screen.
  * - "Undo" beside a reply is offered only when that request saved a version
  *   and that version is still the one on screen.
- * - While a request is saving the box is locked, so nothing typed can be lost
+ * - While anything is saving the box is locked, so nothing typed can be lost
  *   when the box is cleared. If a request fails, the typed message stays in the box.
  */
 import { ArrowUpIcon } from "@phosphor-icons/react";
-import { useActionState, useState } from "react";
-import { moveVersionAction, sendRequestAction } from "@/actions/template-actions";
 import type { VersionPointers } from "@/domain/version-history";
+import { useCopyActions } from "./copy-actions";
 import { IconButton } from "./ui/icon-button";
 import { VersionFields } from "./version-fields";
 
@@ -24,35 +25,8 @@ interface ChangeRequestFormProps {
   pointers: VersionPointers;
 }
 
-// What the line above the box shows: the outcome of the most recent action.
-type Feedback =
-  | { kind: "reply"; reply: string; savedVersion: number | null; shownVersion: number }
-  | { kind: "failure"; message: string }
-  | null;
-
 export function ChangeRequestForm({ templateId, pointers }: ChangeRequestFormProps) {
-  const [message, setMessage] = useState("");
-
-  // Both forms below (the request box and the small Undo) go through this one function,
-  // so the feedback is always from whichever action ran last.
-  async function submit(_previous: Feedback, formData: FormData): Promise<Feedback> {
-    if (formData.has("move")) {
-      const result = await moveVersionAction(null, formData);
-      return result.ok ? null : { kind: "failure", message: result.message };
-    }
-
-    const result = await sendRequestAction(null, formData);
-    if (!result.ok) return { kind: "failure", message: result.message };
-    // The box is cleared only when the request worked.
-    setMessage("");
-    return {
-      kind: "reply",
-      reply: result.reply,
-      savedVersion: result.savedVersion,
-      shownVersion: result.shownVersion,
-    };
-  }
-  const [feedback, formAction, busy] = useActionState(submit, null);
+  const { feedback, formAction, busy, message, setMessage } = useCopyActions();
 
   // A reply belongs to the version that was on screen right after the request.
   const reply =
