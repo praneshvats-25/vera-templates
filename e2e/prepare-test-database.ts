@@ -5,7 +5,7 @@
  *
  * It only ever touches the database named in test-database.ts. Any other address is refused.
  */
-import { execFileSync } from "node:child_process";
+import { execSync } from "node:child_process";
 import { Client } from "pg";
 import { adminDatabaseUrl, assertIsTestDatabase, testDatabaseName } from "./test-database";
 
@@ -22,8 +22,9 @@ async function prepareTestDatabase(): Promise<void> {
   }
 
   // These inherit DATABASE_URL, so they run against the test database.
-  execFileSync("npm", ["run", "db:migrate"], { stdio: "inherit" });
-  execFileSync("npm", ["run", "db:seed"], { stdio: "inherit" });
+  // They go through the shell, which is how `npm` is found on Windows as well.
+  execSync("npm run db:migrate", { stdio: "inherit" });
+  execSync("npm run db:seed", { stdio: "inherit" });
 }
 
 prepareTestDatabase().catch((error: unknown) => {

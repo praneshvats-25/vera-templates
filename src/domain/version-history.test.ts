@@ -29,6 +29,12 @@ describe("a straight line of versions", () => {
     expect(pointersAfterMove("redo", atTwo, threeInARow)).toEqual(atThree);
   });
 
+  it("Discard with nothing to discard changes nothing, so Redo is kept", () => {
+    // Version 1 is shown and published, and version 2 can still be reached with Redo.
+    const afterUndo = { current: 1, published: 1, tip: 2 };
+    expect(pointersAfterMove("discard", afterUndo, threeInARow)).toEqual(afterUndo);
+  });
+
   it("Undo at version 1 changes nothing", () => {
     const atOne = { current: 1, published: 1, tip: 3 };
     expect(undoTarget(threeInARow, 1)).toBeNull();
