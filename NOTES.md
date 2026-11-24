@@ -64,16 +64,17 @@ The bar I set for the code: simple and readable. A short description at the top 
 
 ### 3.1 The same request sent twice
 
-- **The question:** the brief says "add allergies" inserts the Allergies block. Sent twice, does it insert two?
+- **The question:** the brief says "add allergies" inserts the Allergies block. Sent twice, does it insert two? The brief does not answer this, so it was my call.
 - **The AI suggested:** do nothing if the section is already there.
 - **I chose:** the same result, as an exact rule. A request means "make sure this copy has this section". Look at the text on screen for a line equal to the heading, ignoring letter case and surrounding spaces. Nothing remembers past requests, so after an Undo removes the section, the same request adds it back.
 - **What we built:** one plain function: text and message in, new text and reply out. It replies "Nothing to change." when the section is there.
 
 ### 3.2 Which rule runs
 
-- **The AI suggested:** deal with a missing heading in a later pull request, and two keywords in one message later still.
-- **What was wrong:** the brief already answers both. Splitting them invited a bug: trying "medication" because "allergies" matched but changed nothing.
-- **I chose:** pick the first matching rule once, in the brief's order. Apply it, or reply "Nothing to change." Never fall through to the next rule. A missing target heading changes nothing.
+- **The brief requires:** the first matching rule wins, and a missing heading changes nothing. These two are requirements, not my decisions.
+- **The AI suggested:** building the missing-heading case in a later pull request, and two keywords in one message later still.
+- **What was wrong:** required behaviour would have shipped late. Splitting it also invited a bug: trying "medication" because "allergies" matched but changed nothing.
+- **I chose:** ship both with the rules. Pick the first matching rule once, in the brief's order. Apply it, or reply "Nothing to change." Never fall through to the next rule.
 - **Rough edge:** matching is by keyword, as the brief requires. "remove allergies" still adds the section, and singular "allergy" matches nothing.
 
 ### 3.3 A request that changes nothing
