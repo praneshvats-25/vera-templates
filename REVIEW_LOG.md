@@ -15,18 +15,22 @@ Every call in this file is mine. Claude Code wrote the code. I reviewed its plan
 
 The bar I set for the code: simple and readable. A short description at the top of every file. One way of doing each thing, everywhere. Shared pieces instead of copies. Tailwind theme tokens instead of one-off values. Strict tooling: TypeScript strict mode, type-checked lint rules with zero warnings, Prettier, and every input validated.
 
-## 1. Assumptions I made
+## 1. What the brief gives, and what I assumed
 
-| The brief does not say                      | I assumed                                                                                                                                |
-| ------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
-| Who the user is                             | One user, no sign-in. A copy shows "You", "AK" and "Family medicine", as in the design.                                                  |
-| Which screens to support                    | Built for a desktop at 1440 × 900, as the design is drawn. The main actions stay on screen down to 1280 wide. The sidebar is decoration. |
-| The design's "running" and "failed" screens | Not built. The brief says changes happen at once, with no delays, Stop or Try again.                                                     |
-| The text of the other nine templates        | Only the SOAP Note is given, so it matches the brief character for character. The other nine have short placeholder text.                |
-| What a copy is called                       | "My" plus the original's name, as the design shows.                                                                                      |
-| How long a request can be                   | 2,000 characters. That number is mine. Anything longer is refused with a clear reason.                                                   |
-| What "contains the keyword" means           | Any message containing "allergies" or "medication", in any letter case. There is no attempt to understand the sentence.                  |
-| Whether users can type in a template        | Never. The only way to change a copy is to send Vera a request.                                                                          |
+**Given by the brief, so not my decisions:** one user and no sign-in. A desktop layout at 1440 × 900 with a decorative sidebar. Changes happen at once, with no delays, Stop or Try again. The SOAP Note text copied exactly, and short placeholder text for the other templates. Users never type into a template. Keywords match in any letter case, the first matching rule wins, and a missing heading changes nothing.
+
+**Not answered by the brief, so these are mine:**
+
+| The brief does not say                                       | I assumed                                                                                       |
+| ------------------------------------------------------------ | ----------------------------------------------------------------------------------------------- |
+| What a second "Edit a copy" does                             | A fresh, numbered copy each time, with its own history (2.1).                                   |
+| What a request does when the section is already there        | Nothing is saved, and Vera replies "Nothing to change." (3.1).                                  |
+| What happens to a published version when I edit an older one | It is kept. The new edit becomes a new version made from the one on screen (4.1).               |
+| What an out-of-date tab may do                               | Nothing. Its action is refused and the page refreshes (4.4).                                    |
+| Whether Redo works after Discard                             | No. Discard ends the Redo path at the published version (4.2).                                  |
+| What a copy is called, and who it belongs to                 | "My" plus the original's name, labelled "You", "AK" and "Family medicine", as the design shows. |
+| How long a request can be                                    | 2,000 characters. That number is mine. Anything longer is refused with a clear reason.          |
+| How narrow a window to support                               | The main actions stay on screen down to 1280 wide (6.7).                                        |
 
 ## 2. Copies
 
@@ -326,7 +330,7 @@ The reasoning for each decision is in sections 2 to 7 above. This section is the
 
 **The browser tests prove each step, not only the end.**
 
-- _How it was checked:_ five browser tests run against a production build with their own database, `vera_test`. They passed twice in a row and once more on a clean copy of the repo. The development database was not touched.
+- _How it was checked:_ the browser tests (six in all, with the 1280-wide check) run against a production build with their own database, `vera_test`. They passed twice in a row and once more on a clean copy of the repo. The development database was not touched.
 
 ### By hand in Chrome, on the final build
 
