@@ -56,7 +56,9 @@
   --text-badge--letter-spacing: 0.08em;
 
   /* Fixed widths and heights of the 1440 x 900 desktop layout. */
-  --container-frame: 1440px;
+  /* The frame is the narrowest window the layout fits in: the sidebar plus the content column.
+     At 1440 wide the page matches the design. Below 1280 the page scrolls sideways. */
+  --container-frame: 1280px;
   --container-sidebar: 250px;
   --container-content: 1000px;
   --container-template: 704px;

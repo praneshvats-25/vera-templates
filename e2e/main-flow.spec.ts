@@ -4,7 +4,14 @@
  * edit cannot pass by accident.
  */
 import { expect, type Page, test } from "@playwright/test";
-import { askVera, editACopy, openVeraSoapNote, templateText, unpublishedBadge } from "./helpers";
+import {
+  askVera,
+  copyTitle,
+  editACopy,
+  openVeraSoapNote,
+  templateText,
+  unpublishedBadge,
+} from "./helpers";
 
 const allergiesHeading = "Allergies:";
 const medicationHeading = "Medication Reconciliation:";
@@ -64,7 +71,7 @@ test("copy a template, change it, publish, discard, and keep copies separate", a
   await page.goto("/");
   await expect(copyCards(page)).toHaveCount(copiesBefore + 1);
   await page.locator(`a[href="${firstCopyPath}"]`).click();
-  await expect(page.getByRole("heading", { name: /^My SOAP Note/ })).toBeVisible();
+  await expect(copyTitle(page)).toBeVisible();
   await expect(templateText(page)).toContainText(allergiesHeading);
   await expect(templateText(page)).not.toContainText(medicationHeading);
   await expect(unpublishedBadge(page)).toHaveCount(0);

@@ -15,6 +15,11 @@ export function messageBox(page: Page) {
   return page.getByRole("textbox", { name: "Message to Vera" });
 }
 
+/** The title at the top of a copy's page. Library cards use smaller headings, so they never match. */
+export function copyTitle(page: Page) {
+  return page.getByRole("heading", { level: 1, name: /^My SOAP Note/ });
+}
+
 /** Types a request for Vera and presses the send button. */
 export async function askVera(page: Page, message: string) {
   await messageBox(page).fill(message);
@@ -34,6 +39,6 @@ export async function editACopy(page: Page): Promise<string> {
   const originalUrl = page.url();
   await page.getByRole("button", { name: "Edit a copy" }).click();
   await expect(page).not.toHaveURL(originalUrl);
-  await expect(page.getByRole("heading", { name: /^My SOAP Note/ })).toBeVisible();
+  await expect(copyTitle(page)).toBeVisible();
   return new URL(page.url()).pathname;
 }
