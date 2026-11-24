@@ -14,9 +14,7 @@ Built with Next.js (App Router), TypeScript and PostgreSQL. My decisions, trade-
 ```bash
 npm install            # install packages
 cp .env.example .env   # database address the app uses
-npm run db:up          # start Postgres in Docker (port 5433)
-npm run db:migrate     # create the database tables
-npm run db:seed        # add Vera's starter templates
+npm run db:setup       # start Postgres in Docker (port 5433), create the tables, add Vera's templates
 npm run dev            # start the app
 ```
 
@@ -53,21 +51,22 @@ The seven browser tests:
 
 ## Commands
 
-| Command               | What it does                                           |
-| --------------------- | ------------------------------------------------------ |
-| `npm run dev`         | Start the app in development mode                      |
-| `npm run build`       | Build the app for production                           |
-| `npm run check`       | Run lint, format check, type check and unit tests      |
-| `npm run lint`        | Check the code for common mistakes                     |
-| `npm run format`      | Fix the code layout (`format:check` only looks)        |
-| `npm run typecheck`   | Check the types                                        |
-| `npm run test`        | Run the unit tests                                     |
-| `npm run test:e2e`    | Run the seven browser tests                            |
-| `npm run db:up`       | Start the Postgres database                            |
-| `npm run db:down`     | Stop the Postgres database (data is kept)              |
-| `npm run db:migrate`  | Apply the database changes that have not run yet       |
-| `npm run db:seed`     | Add Vera's starter templates (safe to run again)       |
-| `npm run db:generate` | Write a new migration after editing `src/db/schema.ts` |
+| Command               | What it does                                                        |
+| --------------------- | ------------------------------------------------------------------- |
+| `npm run dev`         | Start the app in development mode                                   |
+| `npm run build`       | Build the app for production                                        |
+| `npm run check`       | Run lint, format check, type check and unit tests                   |
+| `npm run lint`        | Check the code for common mistakes                                  |
+| `npm run format`      | Fix the code layout (`format:check` only looks)                     |
+| `npm run typecheck`   | Check the types                                                     |
+| `npm run test`        | Run the unit tests                                                  |
+| `npm run test:e2e`    | Run the seven browser tests                                         |
+| `npm run db:setup`    | Start the database, create the tables and add the starter templates |
+| `npm run db:up`       | Start the Postgres database                                         |
+| `npm run db:down`     | Stop the Postgres database (data is kept)                           |
+| `npm run db:migrate`  | Apply the database changes that have not run yet                    |
+| `npm run db:seed`     | Add Vera's starter templates (safe to run again)                    |
+| `npm run db:generate` | Write a new migration after editing `src/db/schema.ts`              |
 
 ## Where things are
 
